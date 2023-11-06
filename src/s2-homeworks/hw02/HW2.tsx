@@ -17,16 +17,16 @@ import s2 from '../../s1-main/App.module.css'
 * */
 
 // types
-export type AffairPriorityType = any // need to fix any
+export type AffairPriorityType = 'low' | 'middle' | 'high'// need to fix any
 export type AffairType = {
-    _id: any // need to fix any
-    name: any // need to fix any
-    priority: AffairPriorityType
+    _id: number // need to fix any
+    name: string // need to fix any
+    priority: string
 }
 export type FilterType = 'all' | AffairPriorityType
 
 // constants
-const defaultAffairs: any = [ // need to fix any
+const defaultAffairs: AffairType[] = [ // need to fix any
     {_id: 1, name: 'React', priority: 'high'}, // студенты могут изменить содержимое name и количество элементов в массиве, ...priority не менять!
     {_id: 2, name: 'anime', priority: 'low'},
     {_id: 3, name: 'games', priority: 'low'},
@@ -35,22 +35,37 @@ const defaultAffairs: any = [ // need to fix any
 ]
 
 // pure helper functions
-export const filterAffairs = (affairs: any, filter: any): any => { // need to fix any
+export const filterAffairs = (affairs: AffairType[], filter: FilterType): AffairType[] => { // need to fix any
 
-
-    return affairs // need to fix
+    switch (filter) {
+        case "low":
+            return affairs.filter(item => item.priority === 'low');
+        case "middle":
+            return affairs.filter(item => item.priority === 'middle');
+        case "high":
+            return affairs.filter(item => item.priority === 'high');
+        case "all":
+            return [...affairs]
+        default:
+            return []
+    }
 }
-export const deleteAffair = (affairs: any, _id: any): any => { // need to fix any
+export const deleteAffair = (affairs: AffairType[], _id: number): AffairType[] => { // need to fix any
 
-    return affairs // need to fix
+    return affairs.filter(item => item._id !== _id) // need to fix
 }
 
 function HW2() {
-    const [affairs, setAffairs] = useState<any>(defaultAffairs) // need to fix any
+    const [affairs, setAffairs] = useState<AffairType[]>(defaultAffairs) // need to fix any
     const [filter, setFilter] = useState<FilterType>('all')
 
+    const setFilters = (filter: FilterType) => {
+        setFilter(filter)
+    }
+
     const filteredAffairs = filterAffairs(affairs, filter)
-    const deleteAffairCallback = (_id: any) => { // need to fix any
+    const deleteAffairCallback = (_id: number) => { // need to fix any
+        setAffairs(deleteAffair(affairs, _id));
         // need to fix
     }
 
@@ -60,7 +75,7 @@ function HW2() {
             <div className={s2.hw}>
                 <Affairs
                     data={filteredAffairs}
-                    setFilter={setFilter}
+                    setFilter={setFilters}
                     deleteAffairCallback={deleteAffairCallback}
                     filter={filter}
                 />

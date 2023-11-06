@@ -16,6 +16,7 @@
 }
 
 .friendText {
+    max-width: 80%;
     position: relative;
     height: 60px;
     background: rgba(0, 102, 204, 1);
