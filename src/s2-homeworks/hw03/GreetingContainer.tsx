@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Dispatch, KeyboardEvent, KeyboardEventHandler, useState} from 'react'
+import React, {ChangeEvent, Dispatch, KeyboardEvent, useState} from 'react'
 import Greeting from './Greeting'
 import { UserType } from './HW3'
 
@@ -28,7 +28,7 @@ export const pureOnBlur = (name: string,
     // если имя пустое - показать ошибку
 }
 
-export const pureOnEnter = (e: React.KeyboardEvent, addUser: () => void) => {
+export const pureOnEnter = (e: KeyboardEvent, addUser: () => void) => {
     if (e.key === 'Enter') {
         addUser()
     }
@@ -60,13 +60,13 @@ const GreetingContainer: React.FC<GreetingContainerPropsType> = ({
         pureOnBlur(name, setError)
     }
 
-    const onEnter = (e: React.KeyboardEvent) => {
+    const onEnter = (e: KeyboardEvent) => {
         pureOnEnter(e, addUser)
     }
 
     const totalUsers = users.length // need to fix
-    const lastUserName = users.slice(-1)[0].name // need to fix
-console.log(users.slice(-1)[0].name)
+    const lastUserName = name // need to fix
+
     return (
         <Greeting
             name={name}
