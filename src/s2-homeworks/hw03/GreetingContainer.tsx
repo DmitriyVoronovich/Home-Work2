@@ -65,7 +65,7 @@ const GreetingContainer: React.FC<GreetingContainerPropsType> = ({
     }
 
     const totalUsers = users.length // need to fix
-    const lastUserName = name // need to fix
+    const lastUserName = users.length > 0 ? users.slice(-1)[0].name : name // need to fix
 
     return (
         <Greeting
