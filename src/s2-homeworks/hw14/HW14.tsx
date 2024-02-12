@@ -25,44 +25,46 @@ const getTechs = (find: string) => {
 }
 
 const HW14 = () => {
-    const [find, setFind] = useState('')
-    const [isLoading, setLoading] = useState(false)
-    const [searchParams, setSearchParams] = useSearchParams()
-    const [techs, setTechs] = useState<string[]>([])
+    const [find, setFind] = useState('');
+    const [isLoading, setLoading] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [techs, setTechs] = useState<string[]>([]);
 
     const sendQuery = (value: string) => {
-        setLoading(true)
+        setLoading(true);
         getTechs(value)
             .then((res) => {
-                // делает студент
-
-                // сохранить пришедшие данные
-
-                //
+                if (res && res.data && res.data.techs) {
+                    setTechs(res.data.techs);
+                } else {
+                    console.error("Invalid response format");
+                }
             })
-    }
+            .catch((e) => {
+                alert(e.response?.data?.errorText || e.message);
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
     const onChangeText = (value: string) => {
-        setFind(value)
-        // делает студент
-
+        setFind(value);
         // добавить/заменить значение в квери урла
-        // setSearchParams(
-
-        //
-    }
+        setSearchParams({ find: value });
+    };
 
     useEffect(() => {
-        const params = Object.fromEntries(searchParams)
-        sendQuery(params.find || '')
-        setFind(params.find || '')
-    }, [])
+        const params = Object.fromEntries(searchParams);
+        sendQuery(params.find || '');
+        setFind(params.find || '');
+    }, []);
 
-    const mappedTechs = techs.map(t => (
+    const mappedTechs = techs.map((t) => (
         <div key={t} id={'hw14-tech-' + t} className={s.tech}>
             {t}
         </div>
-    ))
+    ));
 
     return (
         <div id={'hw14'}>
@@ -77,13 +79,13 @@ const HW14 = () => {
                 />
 
                 <div id={'hw14-loading'} className={s.loading}>
-                    {isLoading ? '...ищем' : <br/>}
+                    {isLoading ? '...ищем' : <br />}
                 </div>
 
                 {mappedTechs}
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default HW14
+export default HW14;
