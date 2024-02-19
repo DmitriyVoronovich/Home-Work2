@@ -1,30 +1,30 @@
-import React from 'react'
-import SuperSelect from '../../../hw07/common/c5-SuperSelect/SuperSelect'
-import {Pagination} from '@mui/material'
-import s from './SuperPagination.module.css'
+import React from 'react';
+import SuperSelect from '../../../hw07/common/c5-SuperSelect/SuperSelect';
+import { Pagination } from '@mui/material';
+import s from './SuperPagination.module.css';
 
 export type SuperPaginationPropsType = {
-    id?: string
-    page: number
-    itemsCountForPage: number
-    totalCount: number
-    onChange: (page: number, count: number) => void
-}
+    id?: string;
+    page: number;
+    itemsCountForPage: number;
+    totalCount: number;
+    onChange: (page: number, count: number) => void;
+};
 
-const SuperPagination: React.FC<SuperPaginationPropsType> = (
-    {
-        page, itemsCountForPage, totalCount, onChange, id = 'hw15',
-    }
-) => {
-    const lastPage = 10 // пишет студент // вычислить количество страниц
+const SuperPagination: React.FC<SuperPaginationPropsType> = ({
+                                                                 page, itemsCountForPage, totalCount, onChange, id = 'hw15',
+                                                             }) => {
+    const itemsPerPageOptions = [4, 7, 10];
+    const lastPage = Math.ceil(totalCount / itemsCountForPage);
 
-    const onChangeCallback = (event: any, page: number) => {
-        // пишет студент
-    }
+    const onChangeCallback = (event: React.ChangeEvent<unknown>, selectedPage: number) => {
+        onChange(selectedPage, itemsCountForPage);
+    };
 
-    const onChangeSelect = (event: any) => {
-        // пишет студент
-    }
+    const onChangeSelect = (event: React.ChangeEvent<{ value: unknown }>) => {
+        const newItemsCount = Number(event.target.value);
+        onChange(1, newItemsCount); // При изменении количества элементов на странице переключаем на первую страницу
+    };
 
     return (
         <div className={s.pagination}>
@@ -41,25 +41,21 @@ const SuperPagination: React.FC<SuperPaginationPropsType> = (
             />
 
             <span className={s.text1}>
-                показать
-            </span>
+        показать
+      </span>
 
             <SuperSelect
                 id={id + '-pagination-select'}
                 value={itemsCountForPage}
-                options={[
-                    {id: 4, value: 4},
-                    {id: 7, value: 7},
-                    {id: 10, value: 10},
-                ]}
+                options={itemsPerPageOptions.map((count) => ({ id: count, value: count }))}
                 onChange={onChangeSelect}
             />
 
             <span className={s.text2}>
-                строк в таблице
-            </span>
+        строк в таблице
+      </span>
         </div>
-    )
-}
+    );
+};
 
-export default SuperPagination
+export default SuperPagination;
