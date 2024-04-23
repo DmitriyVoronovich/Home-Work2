@@ -1,9 +1,10 @@
 import React from 'react'
+import sort from '../polygon.png'
 
 // добавить в проект иконки и импортировать
-const downIcon = '[\\/]'
-const upIcon = '[/\\]'
-const noneIcon = '[--]'
+const downIcon = sort
+const upIcon = sort
+const noneIcon = sort
 
 export type SuperSortPropsType = {
     id?: string
@@ -13,9 +14,18 @@ export type SuperSortPropsType = {
 }
 
 export const pureChange = (sort: string, down: string, up: string) => {
-    if (!sort || sort === up) return down;
-    if (sort === down) return '';
-    return up;
+    if(sort===''){
+        return down
+    }
+    if(sort===down){
+        return up
+    }
+    if(sort===up){
+        return ''
+    }
+    return up
+    // пишет студент, sort: (click) => down (click) => up (click) => '' (click) => down ...
+    // исправить
 }
 
 const SuperSort: React.FC<SuperSortPropsType> = (
@@ -30,20 +40,24 @@ const SuperSort: React.FC<SuperSortPropsType> = (
         onChange(pureChange(sort, down, up))
     }
 
-    let icon = noneIcon;
-    if (sort === down) icon = downIcon;
-    if (sort === up) icon = upIcon;
+    const icon = sort === down
+        ? downIcon
+        : sort === up
+            ? upIcon
+            : noneIcon
 
     return (
         <span
             id={id + '-sort-' + value}
             onClick={onChangeCallback}
         >
+            сделать иконку
             <img
                 id={id + '-icon-' + sort}
                 src={icon}
-                alt='sort icon'
             />
+
+            {/*{icon} /!*а это убрать*!/*/}
         </span>
     )
 }

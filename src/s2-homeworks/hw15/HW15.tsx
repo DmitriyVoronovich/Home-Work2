@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import s2 from '../../s1-main/App.module.css'
 import s from './HW15.module.css'
-import axios from 'axios'
+import axios, {AxiosResponse} from 'axios'
 import SuperPagination from './common/c9-SuperPagination/SuperPagination'
 import {useSearchParams} from 'react-router-dom'
 import SuperSort from './common/c10-SuperSort/SuperSort'
@@ -14,6 +14,9 @@ import SuperSort from './common/c10-SuperSort/SuperSort'
 * 4 - сделать стили в соответствии с дизайном
 * 5 - добавить HW15 в HW5/pages/JuniorPlus
 * */
+type ResponseType = {
+    data: { techs: TechType[], totalCount: number }
+}
 
 type TechType = {
     id: number
@@ -28,6 +31,7 @@ type ParamsType = {
 }
 
 const getTechs = (params: ParamsType) => {
+    console.log(params)
     return axios
         .get<{ techs: TechType[], totalCount: number }>(
             'https://samurai.it-incubator.io/api/3.0/homework/test3',
@@ -44,54 +48,52 @@ const HW15 = () => {
     const [count, setCount] = useState(4)
     const [idLoading, setLoading] = useState(false)
     const [totalCount, setTotalCount] = useState(100)
-    const [techs, setTechs] = useState<TechType[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [techs, setTechs] = useState<TechType[]>([])
 
     const sendQuery = (params: any) => {
+
         setLoading(true)
         getTechs(params)
-            .then((res) => {
-                setLoading(false)
-                setTechs(res.techs)
-                setTotalCount(res.totalCount)
-            })
-            .catch((e) => {
-                setLoading(false);
-                console.error(e);
-            })
+            .then((res: any) => {
+                // делает студент
+                setTechs(res.data.techs)
+                setTotalCount(res.data.totalCount)
+
+                // сохранить пришедшие данные
+
+                //
+            }).finally(()=>setLoading(false))
     }
 
     const onChangePagination = (newPage: number, newCount: number) => {
-        setPage(newPage);
-        setCount(newCount);
-        sendQuery({sort, page: newPage, count: newCount});
-        window.history.pushState(
-            {},
-            '',
-            `?sort=${sort}&page=${newPage}&count=${newCount}`
-        );
+        // делает студент
+
+        setPage(newPage)
+        setCount(newCount)
+        sendQuery({page: +newPage, count: +newCount})
+        // setSearchParams(
+        setSearchParams({page:'${newPage}',count:'${newCount}'})
+        //
     }
 
     const onChangeSort = (newSort: string) => {
-        setSort(newSort);
-        setPage(1);
-        sendQuery({sort: newSort, page, count});
-        window.history.pushState(
-            {},
-            '',
-            `?sort=${newSort}&page=1&count=${count}`
-        );
+        // делает студент
+
+        setSort(newSort)
+        setPage(1) // при сортировке сбрасывать на 1 страницу
+
+        // sendQuery(
+        sendQuery({sort: newSort, page: 1, count: count})
+        //
     }
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const page = Number(params.get('page')) || 1;
-        const count = Number(params.get('count')) || 4;
-        const sort = params.get('sort') || '';
-        setPage(page);
-        setCount(count);
-        setSort(sort);
-        sendQuery({sort, page, count});
-    }, []);
+        const params = Object.fromEntries(searchParams)
+        sendQuery({page: params.page, count: params.count})
+        setPage(+params.page || 1)
+        setCount(+params.count || 4)
+    }, [])
 
     const mappedTechs = techs.map(t => (
         <div key={t.id} className={s.row}>
